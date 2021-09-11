@@ -4,9 +4,10 @@ from os import name
 from fastapi import APIRouter, Response  #Permite definir subrutas por separado
 from config.db import conn     #Importamos la conexion a la base datos(Permite interactuar con ella)
 from models.user import users
-from schemas.user import User
+from schemas.user import User, UserUpdate
 from cryptography.fernet import Fernet   #Con Fernet se puede crear funcion que permite cifrar
 from starlette.status import HTTP_204_NO_CONTENT
+from fastapi.encoders import jsonable_encoder
 
 key = Fernet.generate_key()
 f = Fernet(key)              #En f queda una funcion con la que podemos cifrar lo que queramos
@@ -36,9 +37,10 @@ def delete_user(id: str):
         return Response(status_code=HTTP_204_NO_CONTENT)
 
 @user.put("/users/{id}")
-def update_user(id: str, user_updated: User):
-        conn.execute(users.update().values(name = user_updated.name, 
-                                           email = user_updated.email, 
-                                           password = user_updated.password).where(users.c.id == id))
+def update_user(id: str, user_updated: UserUpdate):
+        print(user_updated)
+        update_data = user_updated.dict(exclude_unset=True)
+        print(update_data)
+        conn.execute(users.update().values(update_data).where(users.c.id == id))
         return "Updated"
         
