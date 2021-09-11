@@ -36,11 +36,13 @@ def delete_user(id: str):
         conn.execute(users.delete().where(users.c.id == id))
         return Response(status_code=HTTP_204_NO_CONTENT)
 
+
 @user.put("/users/{id}")
 def update_user(id: str, user_updated: UserUpdate):
         print(user_updated)
         update_data = user_updated.dict(exclude_unset=True)
         print(update_data)
         conn.execute(users.update().values(update_data).where(users.c.id == id))
+        print("")
         return "Updated"
         

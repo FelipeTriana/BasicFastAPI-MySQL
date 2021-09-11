@@ -9,7 +9,6 @@ class User(BaseModel):
     password: str
 
 
-
 class UserUpdate(BaseModel):
     id: Optional[str]
     name: Optional[str]
