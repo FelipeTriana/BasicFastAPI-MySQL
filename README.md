@@ -3,21 +3,21 @@
 A virtual environment must be previously created, in this case it was created with conda and named: fastapi-mysql
 
 
-# Activate the virtual environment:
+## Activate the virtual environment:
 
 ```console
 conda activate fastapi-mysql
 ```
 
 
-# Install critical dependencies
+## Install critical dependencies
 
 ```console
 pip install fastapi uvicorn
 ```
 
 
-# Run the project with uvicorn
+## Run the project with uvicorn
 
 ```console
 uvicorn app:app --reload
