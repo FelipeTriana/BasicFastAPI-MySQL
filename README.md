@@ -19,6 +19,8 @@ pip install fastapi uvicorn
 
 ## Run the project with uvicorn
 
+This means, run app function y app module
+
 ```console
 uvicorn app:app --reload
 ```
