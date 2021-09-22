@@ -1,5 +1,6 @@
 #Nota. En este punto es necesario instalar el package cryptography o tirara error 
 
+from inspect import Arguments
 from os import name
 from fastapi import APIRouter, Response  #Permite definir subrutas por separado
 from config.db import conn     #Importamos la conexion a la base datos(Permite interactuar con ella)
@@ -8,9 +9,17 @@ from schemas.user import User, UserUpdate
 from cryptography.fernet import Fernet   #Con Fernet se puede crear funcion que permite cifrar
 from starlette.status import HTTP_204_NO_CONTENT
 from fastapi.encoders import jsonable_encoder
+import http3
+import requests
 
 key = Fernet.generate_key()
 f = Fernet(key)              #En f queda una funcion con la que podemos cifrar lo que queramos
+
+client = http3.AsyncClient()
+
+async def call_api(url: str):
+    r = await client.get(url)
+    return r.json()
 
 user = APIRouter()
 
@@ -44,4 +53,22 @@ def update_user(id: str, user_updated: UserUpdate):
         conn.execute(users.update().values(update_data).where(users.c.id == id))
         return "Updated"
 
-        
+@user.get("/")
+async def root():
+    url = "https://jsonplaceholder.typicode.com/posts"
+    result = await call_api(url)
+    return result
+     
+
+@user.get("/s/")
+def root():
+    url = "https://jsonplaceholder.typicode.com/users"
+    result = requests.get(url)
+    return result.json()
+
+
+@user.post("/s/")
+def root():
+    url = "https://jsonplaceholder.typicode.com/posts"
+    result = requests.post(url)
+    return result.json()
